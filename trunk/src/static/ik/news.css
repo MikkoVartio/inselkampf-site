@@ -1,0 +1,13 @@
+#allianceScoreChart 
+{
+	margin:12px;
+	width:100%px;
+	height:200px;
+	background-color:#dedeed;
+	border:1px solid #999;
+}
+
+td
+{
+	padding-right: 2em;
+}

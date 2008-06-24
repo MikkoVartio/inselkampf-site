@@ -1,0 +1,24 @@
+#Chart
+{
+	margin:12px;
+	width:100%px;
+	height:400px;
+	background-color:#dedeed;
+	border:1px solid #999;
+}
+
+
+th.name
+{
+	width: 20em;
+}
+
+th.position
+{
+	width: 10em;
+}
+
+th.score
+{
+	width: 6em;
+}

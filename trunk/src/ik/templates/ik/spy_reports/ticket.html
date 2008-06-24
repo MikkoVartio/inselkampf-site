@@ -1,0 +1,74 @@
+{% extends "ik/base.html" %}
+
+{% block head_interior %}
+{% endblock %}
+
+{% block title %}Spy Report Archive{% endblock %}
+
+{% block main_content %}
+
+	<h1>Spy Reports</h1>
+	<h2>New Spy Reports?</h2>
+	<form action="" method="post">
+		<textarea name="report_text" cols=50 rows=6></textarea>
+		<br/>
+		<button class="positive" type="submit">Add this information</button>
+	</form>
+
+	<script type="text/javascript"><!--
+	google_ad_client = "pub-7423629205927780";
+	google_ad_width = 300;
+	google_ad_height = 250;
+	google_ad_format = "300x250_as";
+	google_ad_type = "text_image";
+	google_ad_channel = "";
+	google_color_border = "FFFFFF";
+	google_color_bg = "FFFFFF";
+	google_color_link = "0616F3";
+	google_color_text = "000000";
+	google_color_url = "6BB6E1";
+	//-->
+	</script>
+	<script type="text/javascript"
+	  src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+	</script>
+
+	<h2>The Archive</h2>
+
+	{% regroup reports|dictsort:"created_on"|dictsort:"position" by position as grouped %}
+
+	{% for group in grouped %}
+
+		<h3>{{ group.grouper }}</h3>
+		<table>
+			<thead>
+			<th width="50px">Time</th>
+			<th width="150px">Ruler</th>
+			<th width="50px">LWS</th>
+			<th width="50px">SWS</th>
+			<th width="50px">Sf</th>
+			<th width="50px">A</th>
+			<th width="50px">ST</th>
+			<th width="50px">Cat</th>
+			<th width="50px">Wall</th>
+			<th width="50px">Mine</th>
+			</thead>
+			{% for report in group.list|dictsortreversed:"created_on" %}
+			<tr>
+				<td>{{ report.created_on|date:"j M"}}</td>
+				<td>{{ report.ruler|escape }}</td>
+				<td>{{ report.large_warships }}</td>
+				<td>{{ report.small_warships }}</td>
+				<td>{{ report.spearfighters }}</td>
+				<td>{{ report.archers }}</td>
+				<td>{{ report.stone_throwers }}</td>
+				<td>{{ report.catapaults }}</td>
+				<td>{{ report.stone_wall }}</td>
+				<td>{{ report.gold_mine }}</td>
+			</tr>
+			{% endfor %}
+		</table>
+
+	{% endfor %}
+
+{% endblock %}

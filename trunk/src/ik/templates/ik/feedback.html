@@ -1,0 +1,38 @@
+{% extends "ik/base.html" %}
+
+{% block head_interior %}
+	<link rel="stylesheet" type="text/css" href="/static/ik/feedback.css" />
+
+{% endblock %}
+
+
+{% block title %}Feedback{% endblock %}
+
+{% block main_content %}
+
+	<h1>Feedback</h1>
+
+	<p>Send anything: bug reports, feature requests, or comments.</p>
+	<p>Include your email address so I can respond!</p>
+
+	<form action="" method="post" id="formMessage">
+
+		<h5>{{ form.message.label }}</h5>
+		{% if form.message.errors %}
+			<dd class="errors">{{ form.message.errors }}</dd>
+		{% endif %}
+		{{ form.message }}
+
+		<h5>{{ form.email.label }}</h5>
+		{% if form.email.errors %}
+			<dd class="errors">{{ form.email.errors }}</dd>
+		{% endif %}
+		{{ form.email }}
+
+		<h5></h5>
+
+
+
+		<button class="positive" type="submit" id="btnSend">Send</button>
+	</form>
+{% endblock %}

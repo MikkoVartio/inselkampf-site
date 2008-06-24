@@ -1,0 +1,73 @@
+{% extends "ik/base.html" %}
+
+{% block head_interior %}
+<style>
+	a img
+	{
+		float: right;
+	}
+</style>
+{% endblock %}
+
+{% block title %}About{% endblock %}
+
+{% block main_content %}
+	<h1>About SmallMerchantShip.com</h1>
+
+	<h2>Site Updates</h2>
+	<p>The database is updated from the live Inselkampf game twice a day at 00:15 GMT and 12:15 GMT.</p>
+
+	<h2>Inselkampf Security</h2>
+	<p>When you're logged into Inselkampf, the server knows who you are
+	by virtue of the "session" id in your URL. This id is the random looking letters and numbers after
+	"s=". If someone gets ahold of that number then they can pretend to be you: they can send your fleets on attacks,
+	and ship themselves your resources.</p>
+	<p>The most common way for someone to get that number is by virtue of the 'referrer' link that your
+	web browser sends to a server when it requests a new page. Because the Inselkampf session id is stored
+	in the game's URL, it is thus included in the referrer link.</p>
+	<p>You can easily turn referrals off in Firefox:
+		<ol>
+			<li><script type="text/javascript"><!--
+				google_ad_client = "pub-7423629205927780";
+				google_ad_output = "textlink";
+				google_ad_format = "ref_text";
+				google_cpa_choice = "CAAQwaT2_gEaCK4YeWxdsHieKLGsuIEBMAA";
+				//-->
+				</script>
+				<script type="text/javascript" src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+				</script>
+			</li>
+			<li>
+				Launch firefox and type <b>about:config</b> into the address bar.
+			</li>
+			<li>
+				Change the value of "network.http.sendRefererHeader" to 0.
+			</li>
+		</ol>
+	</p>
+
+	<h2>Site Infrastructure</h2>
+	<p>For some reason, everyone in Inselkampf who I talk to about web programming uses php. Don't! It'll suck your soul dry, and leave you with websites that operate like, well, Inselkampf.</p>
+	<p>SmallMerchantShip.com is written in Python on top of the Django web application framework.
+	The database is MySQL, and a month of historical data fills about 150MB of space.
+	I registered the domain with DynDNS because GoDaddy and its ilk creep me out. This turns out to be
+	a bit more expensive, but in the long run, the peace of mind and greater control is worth it. Finally,
+	I use the excellent hosting service provided by <a href="http://www.webfaction.com/signup?affiliate=bluemoo">Webfaction <img alt="Hosting for $7.50/mo" src="/static/ik/120x60-webfaction.png"></a>
+	to actually run this website. They have automated application installers, so if you're thinking of building a similar site, I'd suggest that you check them out.</p>
+
+	<h2>Usage Statistics</h2>
+	<p>Several hundred people use this site every day, and most of them run Firefox. If you aren't, I suggest trying the browser out:</p>
+
+	<script type="text/javascript"><!--
+	google_ad_client = "pub-7423629205927780";
+	google_ad_width = 468;
+	google_ad_height = 60;
+	google_ad_format = "468x60_as_rimg";
+	google_cpa_choice = "CAAQtYiYhAIaCDZg_HnmWO3rKOm293MwAA";
+	//-->
+	</script>
+	<script type="text/javascript" src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+	</script>
+
+	<h2>My Inselkampf Experience</h2>
+{% endblock %}

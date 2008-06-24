@@ -1,0 +1,296 @@
+
+/*
+ ** Default page
+ */
+body
+	{
+	margin: 0;
+	padding: 0;
+	font-family: verdana, arial, helvetica, sans-serif;
+	font-size: 76%;/* font sizing in ems, baby. if you want to change anything, just change this.*/
+	/*funny thing happens at 75% and lower. opera goes to a nice small size, but moz and ie pc change almost not at all. seems 76% is as small as you can go and stay the same across browsers. poop.*/
+
+	background: url(/static/ik/bg_page.gif) repeat-y top left;
+	background-color: #a0a19b;
+	}
+
+#logo
+	{
+	position: absolute;
+	top: 10px;
+	left: 16px;
+	width: 160px;
+	}
+
+/*
+ **Typography
+ */
+/* From http://www.thenoodleincident.com/tutorials/typography/css/real.css */
+a,
+a:visited
+	{
+	text-decoration: none;
+	font-weight: bold;
+	color: #6bb6e1;
+	}
+
+a:hover
+	{
+	color: #0616f3;
+	text-decoration: underline;
+	}
+
+h1 {
+	font-size: 2.0em;
+	font-weight: normal;
+	margin-top: 0em;
+	margin-bottom: 0em;/*both set to zero and padding in header div is used intead to deal with compound ie pc problems that are beyound summary in a simple comment.*/
+	color: #6bb6e1;
+	}
+
+h2 {
+	font-size: 1.7em;
+	margin: 1.2em 0em 1.2em 0em;
+	font-weight: normal;
+	color: #6bb6e1;
+	}
+
+h3 {
+	font-size: 1.4em;
+	margin: 1.2em 0em 1.2em 0em;
+	font-weight: normal;
+	color: #6bb6e1;
+	}
+
+h4 {
+	font-size: 1.2em;
+	margin: 1.2em 0em 1.2em 0em;
+	font-weight: bold;
+	color: #6bb6e1;
+	}
+
+h5 {
+	font-size: 1.0em;
+	margin: 1.2em 0em 1.2em 0em;
+	font-weight: bold;
+	color: #6bb6e1;
+	}
+
+h6 {
+	font-size: 0.8em;
+	margin: 1.2em 0em 1.2em 0em;
+	font-weight: bold;
+	color: #6bb6e1;
+	}
+
+img {
+	border: 0;
+	}
+
+ol, ul, li {/*
+	list-style: none;*/
+	font-size: 1.0em;
+	line-height: 1.2em;
+	margin-top: 0.2em;
+	margin-bottom: 0.1em;
+	}
+
+p {
+	font-size: 1.0em;
+	line-height: 1.2em;
+	margin: .8em 0em .8em 0em;
+	}
+
+li > p {
+	margin-top: 0.2em;
+	}
+
+pre {/*moz 1.0/1.1/1.2.1, net 7.0/7.01 make this way too small, but i'm not going to go larger because monospace tends to run you into overflow pretty quick. prior moz and net are okay.*/
+	font-family: monospace;
+	font-size: 1.0em;
+	}
+
+strong, b {
+	font-weight: bold;
+	}
+
+/*
+ ** Main Content Region
+ */
+
+#main_container
+	{
+	width: 61em;
+
+	position: absolute;
+	top: 60px;
+	left: 220px;
+	}
+
+/*
+	| liquidcorners.css; feel free to adapt the style!
+	| ================================================
+	| use: 4 corners with borderline outside a contentbox with class="inside";
+	|      image  = upper half: top left corner, long borderline, top right corner
+	|               under half: bottom left corner, long borderline, bottom right corner
+	|      CHANGE = you have to change this for fitting to your image
+	|      YCC    = You Can Change (or omit), if wanted
+	|      DNC    = Do Not Change
+	| credits: original by francky kleyneman, see article/tutorial in Francky's Developers Corner:
+	|          http://home.tiscali.nl/developerscorner/liquidcorners/liquidcorners.htm
+	| adapted
+	| by.....: ... (your name and site?!)
+	|
+	| + please let this text & links intact for a next user +
+*/
+.top-left, .top-right, .bottom-left, .bottom-right {
+	background-image: url('/static/ik/white_rounded_box.gif'); /* CHANGE: path and name of your image */
+	height: 10px;       /* CHANGE: replace by the height of one of your corners (= 1/2 height of the image) */
+	font-size: 2px;    /* DNC: correction IE for height of the <div>'s */
+	}
+.top-left, .bottom-left {
+	margin-right: 10px; /* CHANGE: replace by the width of one of your corners */
+	}
+.top-right, .bottom-right {
+	margin-left: 10px;  /* CHANGE: replace by the width of one of your corners */
+	margin-top: -10px;  /* CHANGE: replace by the height of one of your corners */
+	}
+.top-right {
+	background-position: 100% 0;    /* DNC: position right corner at right side, no vertical changes */
+	}
+.bottom-left  {
+	background-position: 0 -10px;    /* CHANGE: replace second number by negative height of one of your corners */
+	}
+.bottom-right {
+	background-position: 100% -10px; /* CHANGE: replace second number by negative height of one of your corners */
+	}
+.inside {
+	border-left: 1px solid white; /* YCC: color & properties of the left-borderline */
+	border-right: 1px solid white;/* YCC: color & properties of the right-borderline */
+	background: white;            /* YCC: background-color of the inside */
+	padding-left: 10px;             /* YCC: all texts at some distance of the left border */
+	padding-right:10px;             /* YCC: all texts at some distance of the right border */
+	}
+.notopgap    { margin-top: 0; height: 1px; }    /* DNC: to avoid splitting of the box */
+.nobottomgap { margin-bottom: -1px; padding-bottom: 1px; } /* DNC: to avoid splitting of the box */
+
+/*
+implementation in the page:
+	...
+	<head>
+	<link rel="stylesheet" type="text/css" href="liquidcorners.css">
+	...
+	</head>
+
+	<body>
+	...
+	<div class="top-left"></div><div class="top-right"></div>
+		<div class="inside">
+		<p class="notopgap">Your text & other things inside</p>
+		...
+		<p class="nobottomgap">...</p>
+		</div>
+	<div class="bottom-left"></div><div class="bottom-right"></div>
+	...
+	</body>
+*/
+
+
+/*
+ ** Sidebar
+ */
+
+#sidebarbox
+	{
+	width: 147px;
+	position: absolute;
+	top: 150px;
+	left: 73px;
+
+	text-align: right;
+	line-height: 1;
+	}
+
+#sidebarbox .top
+	{
+	width: 147px;
+	height: 10px;
+	background: url(/static/ik/blue_sidebar2_top.gif) no-repeat bottom left;
+	}
+
+#sidebarbox .content
+	{
+	width: 147px;
+	background: url(/static/ik/blue_sidebar2_middle.gif) repeat-y top left;
+	}
+
+#sidebarbox .bottom
+	{
+	width: 147px;
+	height: 10px;
+	background: url(/static/ik/blue_sidebar2_bottom.gif) no-repeat top left;
+	}
+
+#sidebarbox hr
+	{
+	border: 1px dashed #79ceff;
+	}
+
+#sidebarbox a,
+#sidebarbox a:visited
+	{
+	color: white;
+	padding-right: 10px;
+	text-decoration: none;
+	}
+
+#sidebarbox a:hover
+	{
+	color: #0616f3;
+	}
+
+/*
+ ** Miscellaneous
+ */
+
+/* Set table style for when headers are all in the first column */
+tbody tr th
+{
+	text-align: right;
+}
+
+tbody tr td
+{
+	text-align: left;
+}
+
+/* Set table style for when headers are all on top of the table */
+thead th
+{
+	text-align: left;
+}
+
+/* In FF, these two selectors will cause the feedback menu item to
+ * be yellow until the first time someone visits it. Then it goes white.
+ * IE doesn't seem to work the same way. */
+#sidebarbox a#feedback
+	{
+	color: yellow;
+	}
+#sidebarbox a#feedback:visited
+	{
+	color: white;
+	}
+#sidebarbox a#feedback:hover
+	{
+	color: #0616f3;
+	}
+	
+button.positive
+	{
+	color: #005719;
+	}
+button.negative
+	{
+	color: #800000;
+	}

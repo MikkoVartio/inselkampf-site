@@ -1,0 +1,14 @@
+th
+{
+	text-align: right;
+}
+
+td
+{
+	text-align: left;
+}
+
+input.alliance_tag
+	{
+		width: 4em;
+	}

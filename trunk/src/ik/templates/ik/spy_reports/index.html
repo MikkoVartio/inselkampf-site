@@ -1,0 +1,42 @@
+{% extends "ik/base.html" %}
+
+{% block head_interior %}
+{% endblock %}
+
+{% block title %}Create A Spy Report Archive{% endblock %}
+
+{% block main_content %}
+
+	<h1>Spy Reports</h1>
+	<h2>How do I use this page?</h2>
+	<ul>
+		<li>Copy and paste your Inselkampf spy reports into the field below.</li>
+		<li>Leave a line between each report.</li>
+		<li>Send the reports to be archived, and you'll be given an access url that you can use to view or add reports.</li>
+		<li>No one else will be able to see your reports, unless you give them the access url.</li>
+	</ul>
+	<h2>Enter your information here...</h2>
+	<form action="" method="post">
+		<button class="positive" type="submit">Create an Archive with this information</button>
+		<br/>
+		<textarea name="report_text" cols=50 rows=20>4 days ago
+Espionage of 13 Example (XX:XX:XX)
+Espionage successful.
+Buildings
+Main House	Level 3
+Gold Mine	Level 1
+Resources
+Gold	100
+Stone	100
+Lumber	100
+
+2 days ago
+Espionage of 13 Example2 (XX:XX:XX)
+Espionage successful.
+Buildings
+Main House	Level 1</textarea>
+		<br/>
+		<button class="positive" type="submit">Create an Archive with this information</button>
+	</form>
+
+{% endblock %}

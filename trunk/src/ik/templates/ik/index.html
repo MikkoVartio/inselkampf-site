@@ -1,0 +1,339 @@
+{% extends "ik/base.html" %}
+
+{% block head_interior %}
+	<meta name="verify-v1" content="xpg0uaBalswxnjCAN+8ku6gP+RVPfgvk2jUeb4LWpsM=" >
+	<script language="javascript" src="http://openlayers.org/api/2/OpenLayers.js"></script>
+	<script language="javascript" src="http://o.aolcdn.com/iamalpha/.resource/jssdk/dojo-0.4.1/dojo.js"></script>
+
+	<link rel="stylesheet" type="text/css" href="/static/ik/map.css" />
+
+{% endblock %}
+
+{% block title %}Inselkampf Map{% endblock %}
+
+{% block main_content %}
+	<h1>Inselkampf Map</h1>
+	<h2>How do I use this?</h2>
+	<ul>
+		<li>Display as many players or unowned islands as you want.</li>
+		<li>Shift+Drag to zoom on a specific area.</li>
+		<li>Only islands in the visible area will be shown, so for large datasets, zoom in first.</li>
+		<li>Click on an island to see information about it.</li>
+	</ul>
+	<h2>Which players are you interested in?</h2>
+
+	<ul>
+		<li>
+			<script type="text/javascript"><!--
+			google_ad_client = "pub-7423629205927780";
+			google_ad_width = 110;
+			google_ad_height = 32;
+			google_ad_format = "110x32_as_rimg";
+			google_cpa_choice = "CAAQlLGkgwIaCF3lZifE8LtJKIy84IEBMAA";
+			//-->
+			</script>
+			<script type="text/javascript" src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+			</script>
+		</li>
+		<li>
+			<button class="positive" id="btnAddPlayer" disabled="true">Display Player</button>
+			<label>
+				with the name:
+				<input id="txt_player" type="text" name="player" value="">
+			</label>
+
+		</li>
+		<li>
+			<button class="positive" id="btnAddRulerless" disabled="true">Display Rulerless Islands</button>
+		</li>
+		<li>
+			<button class="positive" id="btnAddAlliance" disabled="true">Display Alliance</button>
+			<label>
+				with the tag: [
+				<input class="alliance_tag" id="txt_alliance_tag" type="text" name="alliance" value="">
+				] &lt;--slow (zoom first)
+			</label>
+		</li>
+		<li>
+			<button class="positive" id="btnAddUnallied" disabled="true">Display Non-Allied Players</button>
+			&lt;--slow (zoom first)
+		</li>
+		<li>
+			<button class="negative" id="btnClearMap" disabled="true">Clear Map</button>
+		</li>
+	</ul>
+
+	<script type="text/javascript"><!--
+	google_ad_client = "pub-7423629205927780";
+	google_ad_width = 468;
+	google_ad_height = 60;
+	google_ad_format = "468x60_as";
+	google_ad_type = "text_image";
+	google_ad_channel = "";
+	google_color_border = "FFFFFF";
+	google_color_bg = "FFFFFF";
+	google_color_link = "0616F3";
+	google_color_text = "000000";
+	google_color_url = "6BB6E1";
+	//-->
+	</script>
+	<script type="text/javascript"
+	  src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+	</script>
+
+	<div style="width:100%; height:500px; background-color: black;" id="map"></div>
+{% endblock %}
+
+{% block body_end %}
+	<script type="text/javascript">
+		var map = new OpenLayers.Map('map');
+
+		var wms = new OpenLayers.Layer.WMS( "Ocean Map",
+			"/ik/wms/",
+			{layers: 'basic'},
+            {'maxExtent': new OpenLayers.Bounds(0,0,500,500),'maxResolution': "auto"}
+			 );
+		map.addLayer(wms);
+		map.zoomToMaxExtent();
+
+		var oceanLayer = new OpenLayers.Layer.Vector("Ocean Grid");
+		map.addLayer(oceanLayer);
+
+		var featureLayer = new OpenLayers.Layer.Vector("Selected Islands");
+		map.addLayer(featureLayer);
+
+		var control = new OpenLayers.Control.SelectFeature(featureLayer);
+		map.addControl(control);
+		control.activate();
+
+		function fillPopup(popup,data)
+		{
+			var name = data['name'];
+			var position = data['position'];
+			var ruler = data['ruler'];
+			var alliance = data['alliance_tag'];
+			var score = data['score'];
+
+			//Build the url for this island
+			isle_url = '/ik/info/island/'+position.replace(':','/').replace(':','/')+'/';
+			player_url = '/ik/info/player/'+ ruler + '/';
+			alliance_url = '/ik/info/alliance/' + escape(alliance) + '/';
+			text = "<table><tr><th>Island:</th><td>" + name +"</td></tr><tr><th>Position:</th><td>" + position + "</td></tr><tr><th>Ruler:</th><td>" + ruler + "</td></tr><tr><th>Alliance:</th><td>" + alliance + "</td></tr><tr><th>Score:</th><td>" + score +"</td></tr></table> <ul><li><a href=" + isle_url + ">See more about this island</a></li><li><a href="+  player_url +">See more about "+ ruler +"</a></li><li><a href="+ alliance_url+">See more about "+alliance+"</a></li></ul>";
+
+			popup.setContentHTML(text);
+		}
+
+		control.onSelect = function(f) {
+										var id = this.id + "_popup";
+
+										f.popup = new OpenLayers.Popup.AnchoredBubble(id,
+																		f.lonlat,
+																		new OpenLayers.Size(300,250),
+																		"Loading...",
+																		null,
+																		true);
+										map.addPopup(f.popup,true);
+
+										var x = parseInt(f.geometry.x);
+										var y = parseInt(500-f.geometry.y-.5);
+
+										var dataUrl = "/ik/ajax/island_info/?x=" + x + "&y=" + y;
+										var bindArgs = {
+														url: dataUrl,
+														load: function(type, data, evt) {fillPopup(f.popup,data);},
+														mimetype: "text/json"
+														};
+										dojo.io.bind(bindArgs);
+									   };
+
+		function genHex()
+		{
+			colors = new Array("0","1","2","3","4","5","6","7","8","9","a","b","c","d","e","f");
+
+			color="";
+			for (i=0;i<6;i++)
+			{
+				color = color+colors[Math.round(Math.random()*15)];
+			}
+
+			return '#'+color;
+		}
+		function NextColorGenerator()
+		{
+			colors = new Array( "orange","purple","yellow", "white", "blue", "red", "green");
+			return function()
+							{
+								if( colors.length > 0)
+									return colors.pop();
+								else
+									return genHex();
+							}
+		}
+		var NextColor = NextColorGenerator();
+
+		function addIslands(layer, data)
+		{
+			layer.style.fillColor = NextColor();
+
+
+			for(i=0; i<data.length; i++)
+			{
+				pos_x = data[i][0];
+				pos_y = data[i][1];
+				score = data[i][2];
+
+				var point = new OpenLayers.Geometry.Point(pos_x+.5, 500-pos_y-.5);
+				var pointFeature = new OpenLayers.Feature.Vector(point);
+				pointFeature.lonlat = new OpenLayers.LonLat(point.x,point.y);
+
+				layer.style.pointRadius = 10*(score+500)/1500.0;
+
+				//Only display the island if it is in the visible area
+				if( layer.getExtent().containsLonLat( pointFeature.lonlat ) )
+					layer.addFeatures([pointFeature]);
+			}
+		}
+
+		function doAddPlayer()
+		{
+			var playerName = document.getElementById("txt_player");
+			var bindArgs = argsForIslandByPlayer(playerName.value);
+			dojo.io.bind(bindArgs);
+		}
+
+		function argsForIslandByPlayer(playerName)
+		{
+			var bindArgs = {
+								url: "/ik/ajax/island_locations/?player="+playerName,
+								error: function(type, data, evt){ alert("An error occurred."); },
+								load: function(type, data, evt) {addIslands(featureLayer,data); },
+								mimetype: "text/json"
+							};
+			return bindArgs;
+		}
+
+		function onclick_btnAddPlayer()
+		{
+			doAddPlayer();
+		}
+
+		function onkeypress_txt_player(e)
+		{
+			//Only do something if the user hit enter
+			if( e.keyCode == 13 )
+				doAddPlayer();
+		}
+
+		function onclick_btnAddRulerless()
+		{
+			var bindArgs = argsForIslandByPlayer("");
+			dojo.io.bind(bindArgs);
+		}
+
+		function doAddAlliance( alliance_tag )
+		{
+
+
+			var bindArgs = {
+								url: "/ik/ajax/island_locations/?alliance="+alliance_tag,
+								error: function(type, data, evt){ alert("An error occurred."); },
+								load: function(type, data, evt) {addIslands(featureLayer,data); },
+								mimetype: "text/json"
+							};
+
+			dojo.io.bind(bindArgs);
+		}
+
+		function onclick_btnAddAlliance()
+		{
+			var alliance_tag = document.getElementById("txt_alliance_tag").value;
+			alliance_tag = '[' + alliance_tag + ']';
+
+			doAddAlliance( alliance_tag );
+		}
+
+		function onkeypress_txt_alliance_tag(e)
+		{
+			//Only do something if the user hit enter
+			if( e.keyCode == 13 )
+				doAddAlliance();
+		}
+
+		function onclick_btnAddUnallied()
+		{
+			doAddAlliance( '' );
+		}
+
+		function onclick_btnClearMap()
+		{
+			featureLayer.destroyFeatures();
+		}
+
+		function buildGridFeatures()
+		{
+			var style_blue = OpenLayers.Util.extend({}, OpenLayers.Feature.Vector.style['default']);
+			style_blue.strokeColor = "#6bb6e1";
+            style_blue.fillColor = "#6bb6e1";
+            style_blue.strokeWidth = 3;
+            style_blue.strokeOpacity = .3;
+
+        	var result = new Array();
+
+			for( y=0 ; y <= 500 ; y=y+50 )
+			{
+				var p1 = new OpenLayers.Geometry.Point(0,y);
+				var p2 = new OpenLayers.Geometry.Point(500,y);
+				var lineFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.LineString(new Array(p1,p2)), null, style_blue);
+
+				result.push(lineFeature);
+			}
+
+			for( x=0 ; x <= 500 ; x=x+50 )
+			{
+				var p1 = new OpenLayers.Geometry.Point(x,0);
+				var p2 = new OpenLayers.Geometry.Point(x,500);
+				var lineFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.LineString(new Array(p1,p2)), null, style_blue);
+
+				result.push(lineFeature);
+			}
+
+			return result;
+		}
+
+		function onLoad()
+		{
+			oceanLayer.addFeatures( buildGridFeatures() );
+
+
+
+
+			var buttonObj = document.getElementById("btnAddPlayer");
+			dojo.event.connect(buttonObj, "onclick", this, "onclick_btnAddPlayer");
+			buttonObj.disabled = false;
+
+			var playerField = dojo.byId("txt_player");
+			dojo.event.connect(playerField, "onkeypress", this, "onkeypress_txt_player");
+
+			var buttonObj = document.getElementById("btnAddRulerless");
+			dojo.event.connect(buttonObj, "onclick", this, "onclick_btnAddRulerless");
+			buttonObj.disabled = false;
+
+			var buttonObj = document.getElementById("btnAddAlliance");
+			dojo.event.connect(buttonObj, "onclick", this, "onclick_btnAddAlliance");
+			buttonObj.disabled = false;
+
+			var playerField = dojo.byId("txt_alliance_tag");
+			dojo.event.connect(playerField, "onkeypress", this, "onkeypress_txt_alliance_tag");
+
+			var buttonObj = document.getElementById("btnAddUnallied");
+			dojo.event.connect(buttonObj, "onclick", this, "onclick_btnAddUnallied");
+			buttonObj.disabled = false;
+
+			var btnClear = document.getElementById("btnClearMap");
+			dojo.event.connect(btnClear, "onclick", this, "onclick_btnClearMap");
+			btnClear.disabled = false;
+
+		}
+		dojo.addOnLoad( function() { onLoad(); });
+	</script>
+{% endblock %}

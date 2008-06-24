@@ -1,0 +1,158 @@
+{% extends "ik/base.html" %}
+
+{% block head_interior %}
+	<script language="javascript" src="http://o.aolcdn.com/dojo/0.4.3/dojo.js"></script>
+
+	<script language="javascript" src="/static/ik/info/charting_utils.js"></script>
+
+	<link rel="stylesheet" type="text/css" href="/static/ik/info/alliance.css" />
+{% endblock %}
+
+{% block title %}Alliance Info - {{ alliance.tag }}{% endblock %}
+
+{% block main_content %}
+<h1>Alliance Info</h1>
+
+<table>
+	<tbody>
+		<tr>
+			<th>Tag:</th>
+			<td>{{alliance.tag}}</td>
+		</tr>
+		<tr>
+				<th>Score:</th>
+				<td>{{alliance.score}}</td>
+		</tr>
+		<tr>
+				<th>Members:</th>
+				<td>{{alliance.player_set.count}}</td>
+		</tr>
+		<tr>
+				<th>Islands:</th>
+				<td>{{num_islands}}</td>
+		</tr>
+	</tbody>
+</table>
+
+<div id="Chart">Loading Data...</div>
+
+<script type="text/javascript"><!--
+google_ad_client = "pub-7423629205927780";
+google_ad_width = 728;
+google_ad_height = 90;
+google_ad_format = "728x90_as";
+google_ad_type = "text_image";
+google_ad_channel = "";
+google_color_border = "FFFFFF";
+google_color_bg = "FFFFFF";
+google_color_link = "0616F3";
+google_color_text = "000000";
+google_color_url = "6BB6E1";
+//-->
+</script>
+<script type="text/javascript"
+  src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+
+<h2>Members</h2>
+
+<table>
+	<thead>
+		<th>Name</th>
+		<th># of Islands</th>
+		<th>Score</th>
+	</thead>
+
+	{% for player in members %}
+	<tr>
+		<td><a href={{player.get_absolute_url}}>{{player.name}}</a></td>
+		<td>{{player.island_set.count}}</td>
+		<td>{{player.score}}</td>
+	</tr>
+	{% endfor %}
+</table>
+
+<script type="text/javascript"><!--
+google_ad_client = "pub-7423629205927780";
+google_ad_width = 200;
+google_ad_height = 90;
+google_ad_format = "200x90_0ads_al_s";
+google_ad_channel = "";
+google_color_border = "FFFFFF";
+google_color_bg = "FFFFFF";
+google_color_link = "0616F3";
+google_color_text = "000000";
+google_color_url = "6BB6E1";
+//-->
+</script>
+<script type="text/javascript"
+  src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+
+<script language="javascript">
+dojo.require("dojo.collections.Store");
+dojo.require("dojo.charting.Chart");
+dojo.require('dojo.json');
+
+function makeChart(data, node)
+	{
+		//If there isnt enough data to make a meaningful plot, just
+		//bail out of the function.
+		if(data.length < 2 )
+		{
+			node.textContent = "Can't make plot - this alliance was only seen in one scan!";
+			return;
+		}
+
+		var store = new dojo.collections.Store();
+		store.setData(data);
+
+		/* Score plot */
+		var plotArea_score = new dojo.charting.PlotArea();
+		plotArea_score.size={width:680, height:200};
+		plotArea_score.padding={top:20, right:20, bottom:30, left:50 };
+
+		var score_series = new dojo.charting.Series({
+			dataSource : store,
+			bindings : { x:"time", y:"score" },
+			label : "Score"
+			});
+
+		var xA = buildAxisX(data);
+		var yA = buildAxisY(data, 'score');
+		yA.label = "Score";
+
+		var p = new dojo.charting.Plot(xA, yA);
+		p.addSeries({ data:score_series, plotter: dojo.charting.Plotters.Line });
+
+		plotArea_score.plots.push(p);
+		score_series.color = "#0616f3";
+
+		/* Assemble Chart */
+		var chart = new dojo.charting.Chart(null, "Alliance History", "Alliance statistics, over time");
+		//The x and y values are required, or the area wont show in IE.
+		chart.addPlotArea({x:0, y:0, plotArea: plotArea_score });
+
+		chart.node = node;
+		chart.render();
+
+	}
+
+function onLoad()
+{
+	var bindArgs = {
+						url: "{{alliance.get_absolute_url }}scores/",
+						error: function(type, error, evt){ },
+						load: function(type, data, evt) {makeChart(data, dojo.byId("Chart") ); },
+						mimetype: "text/json"
+					};
+
+	dojo.io.bind(bindArgs);
+
+}
+
+dojo.addOnLoad(onLoad)
+
+</script>
+
+{% endblock %}

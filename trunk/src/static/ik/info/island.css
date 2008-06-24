@@ -1,0 +1,34 @@
+#ScoreChart
+{
+	margin:12px;
+	width:100%px;
+	height:200px;
+	background-color:#dedeed;
+	border:1px solid #999;
+}
+
+
+th.date
+{
+	width: 6em;
+}
+
+th.name
+{
+	width: 20em;
+}
+
+th.ruler
+{
+	width: 8em;
+}
+
+th.alliance
+{
+	width: 8em;
+}
+
+th.score
+{
+	width: 6em;
+}

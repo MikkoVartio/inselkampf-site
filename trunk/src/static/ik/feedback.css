@@ -1,0 +1,15 @@
+textarea
+{
+	width: 80%;
+	height: 10em;
+}
+
+#btnSend
+{
+	display: block;
+}
+
+#thanks
+{
+	margin-bottom: 11em;
+}

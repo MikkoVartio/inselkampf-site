@@ -1,0 +1,165 @@
+{% extends "ik/base.html" %}
+
+{% block head_interior %}
+	<script language="javascript" src="http://o.aolcdn.com/dojo/0.4.3/dojo.js"></script>
+
+	<script language="javascript" src="/static/ik/info/charting_utils.js"></script>
+
+	<link rel="stylesheet" type="text/css" href="/static/ik/info/player.css" />
+{% endblock %}
+
+{% block title %}Player Info - {{ player.name }}{% endblock %}
+
+{% block main_content %}
+<h1>Player Info</h1>
+<table>
+	<tbody>
+		<tr>
+			<th>Name:</th>
+			<td>{{player.name}}</td>
+		</tr>
+		<tr>
+				<th>Alliance:</th>
+				<td> <a href={{player.alliance.get_absolute_url}}> {{player.alliance.tag}} </a> </td>
+		</tr>
+		<tr>
+				<th>Island Count:</th>
+				<td>{{player.island_set.count}}</td>
+		</tr>
+		<tr>
+				<th>Score:</th>
+				<td>{{player.score}}</td>
+		</tr>
+	</tbody>
+</table>
+
+<script type="text/javascript"><!--
+google_ad_client = "pub-7423629205927780";
+google_ad_width = 728;
+google_ad_height = 90;
+google_ad_format = "728x90_as";
+google_ad_type = "text_image";
+google_ad_channel = "";
+google_color_border = "FFFFFF";
+google_color_bg = "FFFFFF";
+google_color_link = "0616F3";
+google_color_text = "000000";
+google_color_url = "6BB6E1";
+//-->
+</script>
+<script type="text/javascript"
+  src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+<div id="Chart">Loading Data...</div>
+
+<h2>Current Islands</h2>
+
+<table>
+	<thead>
+		<th class="name">Name</th>
+		<th class="position">Position</th>
+		<th class="score">Score</th>
+	</thead>
+
+	<tbody>
+	{% for sample in islands %}
+		<tr>
+			<td> {{sample.name }} 		</td>
+			<td> <a href={{sample.get_absolute_url}}>{{sample.position }}</a> </td>
+			<td> {{sample.score}} 		</td>
+		</tr>
+	{% endfor %}
+	</tbody>
+</table>
+
+
+<script>
+dojo.require("dojo.collections.Store");
+dojo.require("dojo.charting.Chart");
+dojo.require('dojo.json');
+
+function makeChart(data, node)
+	{
+		//If there isnt enough data to make a meaningful plot, just
+		//bail out of the function.
+		if(data.length < 2 )
+		{
+			node.textContent = "Can't make plot - this player was only seen in one scan!";
+			return;
+		}
+
+		var store = new dojo.collections.Store();
+		store.setData(data);
+
+		/* Score plot */
+		var plotArea_score = new dojo.charting.PlotArea();
+		plotArea_score.size={width:680, height:200};
+		plotArea_score.padding={top:20, right:20, bottom:30, left:50 };
+
+		var score_series = new dojo.charting.Series({
+			dataSource : store,
+			bindings : { x:"time", y:"score" },
+			label : "Score"
+			});
+
+		var xA = buildAxisX(data);
+		var yA = buildAxisY(data, 'score');
+		yA.label = "Score";
+
+		var p = new dojo.charting.Plot(xA, yA);
+		p.addSeries({ data:score_series, plotter: dojo.charting.Plotters.Line });
+
+		plotArea_score.plots.push(p);
+		score_series.color = "#0616f3";
+
+
+		/* Islands plot */
+		var plotArea_count = new dojo.charting.PlotArea();
+		plotArea_count.size={width:680, height:200};
+		plotArea_count.padding={top:20, right:20, bottom:30, left:50 };
+
+		var count_series = new dojo.charting.Series({
+			dataSource : store,
+			bindings : { x:"time", y:"island_count" },
+			label : "Island Count"
+			});
+
+		var xA = buildAxisX(data);
+		var yA = buildAxisY(data, 'island_count');
+		yA.label = "# Islands";
+
+		var p = new dojo.charting.Plot(xA, yA);
+		p.addSeries({ data:count_series, plotter: dojo.charting.Plotters.Line });
+
+		plotArea_count.plots.push(p);
+		count_series.color = "#0616f3";
+
+
+		/* Assemble Chart */
+		var chart = new dojo.charting.Chart(null, "Player History", "Player statistics, over time");
+		//The x and y values are required, or the area wont show in IE.
+		chart.addPlotArea({x:0, y:0, plotArea: plotArea_score });
+		chart.addPlotArea({x:0, y:200, plotArea: plotArea_count});
+
+		chart.node = node;
+		chart.render();
+
+	}
+
+function onLoad()
+{
+	var bindArgs = {
+						url: "{{player.get_absolute_url }}scores/",
+						error: function(type, error, evt){  },
+						load: function(type, data, evt) {makeChart(data, dojo.byId("Chart") ); },
+						mimetype: "text/json"
+					};
+
+	dojo.io.bind(bindArgs);
+
+}
+
+dojo.addOnLoad(onLoad)
+</script>
+
+{% endblock %}
