@@ -1,0 +1,3 @@
+I created this website in order to learn both python and the django web framework. At the time, I played Inselkampf under the name bluemoo, and was friends with one of the larger players. He  needed better situational awareness, and I wanted an excuse to code. Please excuse the non-pythonic style - I was learning!
+
+I've shut down my instance of this site, but I feel that it was so integral to playing the game successfully that I want to allow others to run their own version, if they'd like. It has been set up by someone else at least once, so far. This was created with django .96 and python 2.4. Good luck!
